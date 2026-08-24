@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     def cors_origin_list(self) -> list[str]:
         if self.cors_origins == "*":
             return ["*"]
-        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        return [origin.strip().rstrip("/") for origin in self.cors_origins.split(",") if origin.strip()]
 
     @property
     def max_file_size_bytes(self) -> int:

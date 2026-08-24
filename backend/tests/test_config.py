@@ -18,6 +18,14 @@ def test_cors_origin_list_parses_csv(monkeypatch):
     get_settings.cache_clear()
 
 
+def test_cors_origin_list_strips_trailing_slash(monkeypatch):
+    monkeypatch.setenv("CORS_ORIGINS", "https://a.com/")
+    get_settings.cache_clear()
+    settings = get_settings()
+    assert settings.cors_origin_list == ["https://a.com"]
+    get_settings.cache_clear()
+
+
 def test_max_file_size_bytes(monkeypatch):
     monkeypatch.setenv("MAX_FILE_SIZE_MB", "5")
     get_settings.cache_clear()
