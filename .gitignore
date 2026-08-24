@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+data/chroma/
+*.egg-info/
+.pytest_cache/
+node_modules/
+.DS_Store
+venv/
+.venv/
+.superpowers/
+.pytest_cache/
+*.egg-info/
+.DS_Store
+data/test_chroma/
