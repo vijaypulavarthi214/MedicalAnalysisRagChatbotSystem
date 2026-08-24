@@ -4,16 +4,12 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: starter
-    disk:
-      name: chroma-data
-      mountPath: /app/data/chroma
-      sizeGB: 1
+    plan: free
     envVars:
       - key: GROQ_API_KEY
         sync: false
       - key: GROQ_MODEL
-        value: llama-3.3-70b-versatile
+        value: qwen/qwen3.6-27b
       - key: COHERE_API_KEY
         sync: false
       - key: COHERE_RERANK_MODEL

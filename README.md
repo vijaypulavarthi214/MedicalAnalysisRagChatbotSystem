@@ -90,7 +90,8 @@ API keys.
 1. Push this repo to GitHub.
 2. In Render, create a new Blueprint from `render.yaml` (or a Web Service pointing at the root `Dockerfile`).
 3. Set the secret env vars in the Render dashboard: `GROQ_API_KEY`, `COHERE_API_KEY`, `CORS_ORIGINS` (set this to your Netlify URL once you have it, e.g. `https://your-app.netlify.app`).
-4. Render's free tier spins down when idle — the first request after idle will be slow (cold start + model already baked into the image helps, but the instance itself still has to boot).
+4. Render's free tier spins down after 15 minutes idle — the first request after that will be slow (cold start + model already baked into the image helps, but the instance itself still has to boot, often 30-60s+).
+5. Free tier has no persistent disk, so `CHROMA_PERSIST_DIRECTORY` lives on ephemeral container storage — every restart/redeploy/spin-down wipes all uploaded documents. Re-upload after any of those. Upgrading to a paid plan + adding a `disk:` block to `render.yaml` fixes this if it becomes a problem.
 
 ### Frontend → Netlify
 
@@ -113,6 +114,9 @@ cd backend && ../.venv/bin/python -m pytest -v
 - The document registry (`/documents` metadata) is in-memory and resets on backend
   restart — chunk data itself persists in Chroma, but the friendly filename/page-count
   listing does not survive a restart until re-uploaded.
+- On Render's free tier there's no persistent disk, so Chroma's data is wiped on every
+  restart/redeploy/idle spin-down too — treat the deployed app as demo-only unless you
+  upgrade to a paid Render plan with an attached disk.
 - `/upload` processes the PDF synchronously; very large documents will hold the
   request open for the full ingestion pipeline.
 - Groq's free tier has per-minute/per-day rate limits that can be hit under heavy
